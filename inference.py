@@ -14,14 +14,12 @@ def reset_env():
     try:
         return requests.post(ENV_URL + '/reset', timeout=30).json()
     except Exception as e:
-        print('Reset failed: ' + str(e))
         return {'done': True, 'code_snippet': '', 'task_type': 'easy', 'task_description': ''}
 
 def step_env(action):
     try:
         return requests.post(ENV_URL + '/step', json=action, timeout=30).json()
     except Exception as e:
-        print('Step failed: ' + str(e))
         return {'done': True, 'reward': 0.0}
 
 def get_action(obs):
@@ -39,11 +37,11 @@ def get_action(obs):
         clean = text.strip().replace('```json', '').replace('```', '').strip()
         return json.loads(clean)
     except Exception as e:
-        print('LLM error: ' + str(e))
         return {'has_syntax_error': False, 'quality_score': 0.5, 'issues': ['issue'], 'severity': 'low'}
 
 def run_episode(n):
-    print('START episode=' + str(n))
+    task_name = 'code_review_' + str(n)
+    print('[START] task=' + task_name, flush=True)
     obs = reset_env()
     total = 0.0
     steps = 0
@@ -53,9 +51,9 @@ def run_episode(n):
         score = obs.get('reward', 0.0)
         total += score
         steps += 1
-        print('STEP ' + str(steps) + ': score=' + str(round(score, 2)))
+        print('[STEP] step=' + str(steps) + ' reward=' + str(round(score, 2)), flush=True)
     avg = total / max(steps, 1)
-    print('END episode=' + str(n) + ' score=' + str(round(avg, 2)))
+    print('[END] task=' + task_name + ' score=' + str(round(avg, 2)) + ' steps=' + str(steps), flush=True)
     return avg
 
 if __name__ == '__main__':
@@ -64,6 +62,6 @@ if __name__ == '__main__':
         try:
             scores.append(run_episode(i + 1))
         except Exception as e:
-            print('END episode=' + str(i+1) + ' score=0.00')
+            print('[END] task=code_review_' + str(i+1) + ' score=0.00 steps=0', flush=True)
             scores.append(0.0)
-    print('FINAL_SCORE=' + str(round(sum(scores)/len(scores), 2)))
+    print('FINAL_SCORE=' + str(round(sum(scores)/len(scores), 2)), flush=True)
