@@ -122,7 +122,9 @@ class CodeReviewEnvironment(Environment):
         else:
             if len(action.issues) == 0:
                 reward += 0.5
-        return min(reward, 1.0)
+        result = min(reward, 1.0)
+        result = max(0.01, min(result, 0.99))
+        return result
 
     def step(self, action: CodeReviewAction) -> CodeReviewObservation:
         self._state.step_count += 1
