@@ -53,7 +53,67 @@ TASKS = {
             "severity": "medium"
         },
     ],
+    "javascript": [
+        {
+            "code": "function add(a, b) {\n    return a + b\n}\nconsole.log(add(1, 2))",
+            "language": "javascript",
+            "description": "Find code quality issues in this JavaScript code",
+            "has_syntax_error": False,
+            "expected_issues": ["missing semicolons"],
+            "severity": "low"
+        },
+        {
+            "code": "var password = 'admin123';\nif (userInput == password) {\n    grantAccess();\n}",
+            "language": "javascript",
+            "description": "Full review: find bugs and security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["hardcoded password", "use === instead of ==", "security risk"],
+            "severity": "high"
+        },
+        {
+            "code": "function fetchData(url) {\n    var result = null;\n    $.ajax({url: url, async: false, success: function(data) { result = data; }});\n    return result;\n}",
+            "language": "javascript",
+            "description": "Full review: find bugs and performance issues",
+            "has_syntax_error": False,
+            "expected_issues": ["synchronous ajax call", "performance issue", "blocks main thread"],
+            "severity": "high"
+        },
+    ],
+    "java": [
+        {
+            "code": "public class Main {\n    public static void main(String[] args) {\n        String s = null;\n        System.out.println(s.length());\n    }\n}",
+            "language": "java",
+            "description": "Full review: find bugs and security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["null pointer exception", "no null check"],
+            "severity": "high"
+        },
+        {
+            "code": "public void readFile(String path) {\n    FileReader fr = new FileReader(path);\n    BufferedReader br = new BufferedReader(fr);\n    System.out.println(br.readLine());\n}",
+            "language": "java",
+            "description": "Full review: find bugs and security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["resource leak", "no try-finally", "file not closed"],
+            "severity": "high"
+        },
+    ],
     "hard": [
+       {
+           "code": "def divide(a, b):\n    return a / b",
+           "language": "python",
+           "description": "Full review: find bugs, security issues and performance problems",
+           "has_syntax_error": False,
+           "expected_issues": ["division by zero", "no error handling"],
+           "severity": "high"
+       },
+       {
+           "code": "password = \"admin123\"\nif user_input == password:\n    grant_access()",
+           "language": "python",
+           "description": "Full review: find bugs, security issues and performance problems",
+           "has_syntax_error": False,
+           "expected_issues": ["hardcoded password", "security risk"],
+           "severity": "high"
+       },
         {
             "code": "import os\ndef delete_files(path):\n    files = os.listdir(path)\n    for f in files:\n        os.remove(f)",
             "language": "python",
@@ -84,7 +144,7 @@ class CodeReviewEnvironment(Environment):
         self._step = 0
 
     def _get_task(self):
-        task_type = random.choice(["easy", "medium", "hard"])
+        task_type = random.choice(["easy", "medium", "hard", "javascript", "java"])
         self._task_type = task_type
         return random.choice(TASKS[task_type])
 
