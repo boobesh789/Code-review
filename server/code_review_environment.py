@@ -113,6 +113,50 @@ TASKS = {
             "severity": "high"
         },
     ],
+    "javascript": [
+        {
+            "code": "function add(a, b) {\n    return a + b\n}\nconsole.log(add(1, 2))",
+            "language": "javascript",
+            "description": "Find code quality issues in JavaScript",
+            "has_syntax_error": False,
+            "expected_issues": ["missing semicolons"],
+            "severity": "low"
+        },
+        {
+            "code": "var password = 'admin123';\nif (userInput == password) {\n    grantAccess();\n}",
+            "language": "javascript",
+            "description": "Full review: find security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["hardcoded password", "use === instead of ==", "security risk"],
+            "severity": "high"
+        },
+        {
+            "code": "function getUserData(id) {\n    var query = 'SELECT * FROM users WHERE id=' + id;\n    return db.execute(query);\n}",
+            "language": "javascript",
+            "description": "Full review: find security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["SQL injection", "no input validation", "security risk"],
+            "severity": "high"
+        },
+    ],
+    "java": [
+        {
+            "code": "public class Main {\n    public static void main(String[] args) {\n        String s = null;\n        System.out.println(s.length());\n    }\n}",
+            "language": "java",
+            "description": "Full review: find bugs and security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["null pointer exception", "no null check"],
+            "severity": "high"
+        },
+        {
+            "code": "public void readFile(String path) {\n    FileReader f = new FileReader(path);\n    f.read();\n}",
+            "language": "java",
+            "description": "Full review: find bugs and security issues",
+            "has_syntax_error": False,
+            "expected_issues": ["resource not closed", "no exception handling"],
+            "severity": "medium"
+        },
+    ],
     "hard": [
         {
             "code": "def divide(a, b):\n    return a / b",
