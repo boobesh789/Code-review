@@ -11,6 +11,22 @@ except ImportError:
 TASKS = {
     "easy": [
         {
+            "code": "def greet(name)\n    print('Hello ' + name)",
+            "language": "python",
+            "description": "Find syntax errors in this code",
+            "has_syntax_error": True,
+            "expected_issues": ["missing colon after function definition"],
+            "severity": "high"
+        },
+        {
+            "code": "for i in range(10)\n    print(i)",
+            "language": "python",
+            "description": "Find syntax errors in this code",
+            "has_syntax_error": True,
+            "expected_issues": ["missing colon after for loop"],
+            "severity": "high"
+        },
+        {
             "code": "def add(a, b)\n    return a + b",
             "language": "python",
             "description": "Find syntax errors in this code",
@@ -98,6 +114,22 @@ TASKS = {
         },
     ],
     "hard": [
+        {
+            "code": "def divide(a, b):\n    return a / b",
+            "language": "python",
+            "description": "Full review: find bugs, security issues and performance problems",
+            "has_syntax_error": False,
+            "expected_issues": ["division by zero", "no error handling"],
+            "severity": "high"
+        },
+        {
+            "code": "password = \"admin123\"\nif user_input == password:\n    grant_access()",
+            "language": "python",
+            "description": "Full review: find bugs, security issues and performance problems",
+            "has_syntax_error": False,
+            "expected_issues": ["hardcoded password", "security risk"],
+            "severity": "high"
+        },
        {
            "code": "def divide(a, b):\n    return a / b",
            "language": "python",
