@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install --no-cache-dir fastapi uvicorn pydantic openenv-core
+RUN pip install --no-cache-dir fastapi uvicorn pydantic openenv-core gradio requests
 
 ENV PYTHONPATH="/app:$PYTHONPATH"
 

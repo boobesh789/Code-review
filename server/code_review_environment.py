@@ -8,206 +8,107 @@ try:
 except ImportError:
     from models import CodeReviewAction, CodeReviewObservation
 
-TASKS = {
-    "easy": [
-        {
-            "code": "def greet(name)\n    print('Hello ' + name)",
-            "language": "python",
-            "description": "Find syntax errors in this code",
-            "has_syntax_error": True,
-            "expected_issues": ["missing colon after function definition"],
-            "severity": "high"
-        },
-        {
-            "code": "for i in range(10)\n    print(i)",
-            "language": "python",
-            "description": "Find syntax errors in this code",
-            "has_syntax_error": True,
-            "expected_issues": ["missing colon after for loop"],
-            "severity": "high"
-        },
-        {
-            "code": "def add(a, b)\n    return a + b",
-            "language": "python",
-            "description": "Find syntax errors in this code",
-            "has_syntax_error": True,
-            "expected_issues": ["missing colon after function definition"],
-            "severity": "high"
-        },
-        {
-            "code": "x = [1, 2, 3\nprint(x)",
-            "language": "python",
-            "description": "Find syntax errors in this code",
-            "has_syntax_error": True,
-            "expected_issues": ["missing closing bracket"],
-            "severity": "high"
-        },
-        {
-            "code": "def multiply(a, b):\n    return a * b",
-            "language": "python",
-            "description": "Find syntax errors in this code",
-            "has_syntax_error": False,
-            "expected_issues": [],
-            "severity": "low"
-        },
-    ],
-    "medium": [
-        {
-            "code": "def x(a, b, c, d, e, f):\n    return a+b+c+d+e+f",
-            "language": "python",
-            "description": "Find code quality issues: naming and complexity",
-            "has_syntax_error": False,
-            "expected_issues": ["poor function name", "too many parameters"],
-            "severity": "medium"
-        },
-        {
-            "code": "def calculate(a, b):\n    result = a + b\n    result2 = a - b\n    result3 = a * b\n    return result, result2, result3",
-            "language": "python",
-            "description": "Find code quality issues",
-            "has_syntax_error": False,
-            "expected_issues": ["poor variable names", "function does too many things"],
-            "severity": "medium"
-        },
-    ],
-    "javascript": [
-        {
-            "code": "function add(a, b) {\n    return a + b\n}\nconsole.log(add(1, 2))",
-            "language": "javascript",
-            "description": "Find code quality issues in this JavaScript code",
-            "has_syntax_error": False,
-            "expected_issues": ["missing semicolons"],
-            "severity": "low"
-        },
-        {
-            "code": "var password = 'admin123';\nif (userInput == password) {\n    grantAccess();\n}",
-            "language": "javascript",
-            "description": "Full review: find bugs and security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["hardcoded password", "use === instead of ==", "security risk"],
-            "severity": "high"
-        },
-        {
-            "code": "function fetchData(url) {\n    var result = null;\n    $.ajax({url: url, async: false, success: function(data) { result = data; }});\n    return result;\n}",
-            "language": "javascript",
-            "description": "Full review: find bugs and performance issues",
-            "has_syntax_error": False,
-            "expected_issues": ["synchronous ajax call", "performance issue", "blocks main thread"],
-            "severity": "high"
-        },
-    ],
-    "java": [
-        {
-            "code": "public class Main {\n    public static void main(String[] args) {\n        String s = null;\n        System.out.println(s.length());\n    }\n}",
-            "language": "java",
-            "description": "Full review: find bugs and security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["null pointer exception", "no null check"],
-            "severity": "high"
-        },
-        {
-            "code": "public void readFile(String path) {\n    FileReader fr = new FileReader(path);\n    BufferedReader br = new BufferedReader(fr);\n    System.out.println(br.readLine());\n}",
-            "language": "java",
-            "description": "Full review: find bugs and security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["resource leak", "no try-finally", "file not closed"],
-            "severity": "high"
-        },
-    ],
-    "javascript": [
-        {
-            "code": "function add(a, b) {\n    return a + b\n}\nconsole.log(add(1, 2))",
-            "language": "javascript",
-            "description": "Find code quality issues in JavaScript",
-            "has_syntax_error": False,
-            "expected_issues": ["missing semicolons"],
-            "severity": "low"
-        },
-        {
-            "code": "var password = 'admin123';\nif (userInput == password) {\n    grantAccess();\n}",
-            "language": "javascript",
-            "description": "Full review: find security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["hardcoded password", "use === instead of ==", "security risk"],
-            "severity": "high"
-        },
-        {
-            "code": "function getUserData(id) {\n    var query = 'SELECT * FROM users WHERE id=' + id;\n    return db.execute(query);\n}",
-            "language": "javascript",
-            "description": "Full review: find security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["SQL injection", "no input validation", "security risk"],
-            "severity": "high"
-        },
-    ],
-    "java": [
-        {
-            "code": "public class Main {\n    public static void main(String[] args) {\n        String s = null;\n        System.out.println(s.length());\n    }\n}",
-            "language": "java",
-            "description": "Full review: find bugs and security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["null pointer exception", "no null check"],
-            "severity": "high"
-        },
-        {
-            "code": "public void readFile(String path) {\n    FileReader f = new FileReader(path);\n    f.read();\n}",
-            "language": "java",
-            "description": "Full review: find bugs and security issues",
-            "has_syntax_error": False,
-            "expected_issues": ["resource not closed", "no exception handling"],
-            "severity": "medium"
-        },
-    ],
-    "hard": [
-        {
-            "code": "def divide(a, b):\n    return a / b",
-            "language": "python",
-            "description": "Full review: find bugs, security issues and performance problems",
-            "has_syntax_error": False,
-            "expected_issues": ["division by zero", "no error handling"],
-            "severity": "high"
-        },
-        {
-            "code": "password = \"admin123\"\nif user_input == password:\n    grant_access()",
-            "language": "python",
-            "description": "Full review: find bugs, security issues and performance problems",
-            "has_syntax_error": False,
-            "expected_issues": ["hardcoded password", "security risk"],
-            "severity": "high"
-        },
-       {
-           "code": "def divide(a, b):\n    return a / b",
-           "language": "python",
-           "description": "Full review: find bugs, security issues and performance problems",
-           "has_syntax_error": False,
-           "expected_issues": ["division by zero", "no error handling"],
-           "severity": "high"
-       },
-       {
-           "code": "password = \"admin123\"\nif user_input == password:\n    grant_access()",
-           "language": "python",
-           "description": "Full review: find bugs, security issues and performance problems",
-           "has_syntax_error": False,
-           "expected_issues": ["hardcoded password", "security risk"],
-           "severity": "high"
-       },
-        {
-            "code": "import os\ndef delete_files(path):\n    files = os.listdir(path)\n    for f in files:\n        os.remove(f)",
-            "language": "python",
-            "description": "Full review: find bugs, security issues and performance problems",
-            "has_syntax_error": False,
-            "expected_issues": ["missing path join", "security risk", "no error handling", "deletes wrong files"],
-            "severity": "high"
-        },
-        {
-            "code": "def get_user(id):\n    query = 'SELECT * FROM users WHERE id=' + id\n    return db.execute(query)",
-            "language": "python",
-            "description": "Full review: find bugs, security issues and performance problems",
-            "has_syntax_error": False,
-            "expected_issues": ["SQL injection vulnerability", "no input validation", "security risk"],
-            "severity": "high"
-        },
-    ]
-}
+TASKS = [
+    {
+        "code": "def add(a, b)\n    return a + b",
+        "language": "python",
+        "description": "Find syntax errors in this code",
+        "has_syntax_error": True,
+        "expected_issues": ["missing colon"],
+        "severity": "high",
+        "difficulty": "easy"
+    },
+    {
+        "code": "x = [1, 2, 3\nprint(x)",
+        "language": "python",
+        "description": "Find syntax errors in this code",
+        "has_syntax_error": True,
+        "expected_issues": ["missing bracket"],
+        "severity": "high",
+        "difficulty": "easy"
+    },
+    {
+        "code": "def multiply(a, b):\n    return a * b",
+        "language": "python",
+        "description": "Find syntax errors in this code",
+        "has_syntax_error": False,
+        "expected_issues": [],
+        "severity": "low",
+        "difficulty": "easy"
+    },
+    {
+        "code": "for i in range(10)\n    print(i)",
+        "language": "python",
+        "description": "Find syntax errors in this code",
+        "has_syntax_error": True,
+        "expected_issues": ["missing colon"],
+        "severity": "high",
+        "difficulty": "easy"
+    },
+    {
+        "code": "def x(a, b, c, d, e, f):\n    return a+b+c+d+e+f",
+        "language": "python",
+        "description": "Find code quality issues",
+        "has_syntax_error": False,
+        "expected_issues": ["poor name", "too many parameters"],
+        "severity": "medium",
+        "difficulty": "medium"
+    },
+    {
+        "code": "def calculate(a, b):\n    r1 = a + b\n    r2 = a - b\n    r3 = a * b\n    return r1, r2, r3",
+        "language": "python",
+        "description": "Find code quality issues",
+        "has_syntax_error": False,
+        "expected_issues": ["poor variable names", "too many things"],
+        "severity": "medium",
+        "difficulty": "medium"
+    },
+    {
+        "code": "import os\ndef delete_files(path):\n    files = os.listdir(path)\n    for f in files:\n        os.remove(f)",
+        "language": "python",
+        "description": "Full review: find bugs and security issues",
+        "has_syntax_error": False,
+        "expected_issues": ["missing path join", "no error handling"],
+        "severity": "high",
+        "difficulty": "hard"
+    },
+    {
+        "code": "def get_user(id):\n    query = 'SELECT * FROM users WHERE id=' + id\n    return db.execute(query)",
+        "language": "python",
+        "description": "Full review: find bugs and security issues",
+        "has_syntax_error": False,
+        "expected_issues": ["sql injection", "no validation"],
+        "severity": "high",
+        "difficulty": "hard"
+    },
+    {
+        "code": "def divide(a, b):\n    return a / b",
+        "language": "python",
+        "description": "Full review: find bugs and security issues",
+        "has_syntax_error": False,
+        "expected_issues": ["division by zero", "no error handling"],
+        "severity": "high",
+        "difficulty": "hard"
+    },
+    {
+        "code": "var password = 'admin123';\nif (userInput == password) {\n    grantAccess();\n}",
+        "language": "javascript",
+        "description": "Full review: find security issues",
+        "has_syntax_error": False,
+        "expected_issues": ["hardcoded password", "security risk"],
+        "severity": "high",
+        "difficulty": "hard"
+    },
+    {
+        "code": "public void readFile(String path) {\n    FileReader f = new FileReader(path);\n    f.read();\n}",
+        "language": "java",
+        "description": "Full review: find bugs and security issues",
+        "has_syntax_error": False,
+        "expected_issues": ["resource not closed", "no exception handling"],
+        "severity": "medium",
+        "difficulty": "hard"
+    },
+]
 
 class CodeReviewEnvironment(Environment):
     SUPPORTS_CONCURRENT_SESSIONS: bool = True
@@ -220,9 +121,9 @@ class CodeReviewEnvironment(Environment):
         self._step = 0
 
     def _get_task(self):
-        task_type = random.choice(["easy", "medium", "hard", "javascript", "java"])
-        self._task_type = task_type
-        return random.choice(TASKS[task_type])
+        task = random.choice(TASKS)
+        self._task_type = task["difficulty"]
+        return task
 
     def reset(self) -> CodeReviewObservation:
         self._state = State(episode_id=str(uuid4()), step_count=0)
@@ -244,30 +145,33 @@ class CodeReviewEnvironment(Environment):
     def _grade(self, action: CodeReviewAction) -> float:
         task = self._current_task
         reward = 0.0
-        if action.has_syntax_error == task["has_syntax_error"]:
-            reward += 0.3
-        if action.severity == task["severity"]:
-            reward += 0.2
-        if task["expected_issues"]:
-            matched = sum(
-                1 for issue in action.issues
-                if any(exp in issue.lower() for exp in task["expected_issues"])
-            )
-            issue_score = matched / len(task["expected_issues"])
-            reward += 0.5 * issue_score
-        else:
-            if len(action.issues) == 0:
-                reward += 0.5
-        result = min(reward, 1.0)
-        result = max(0.01, min(result, 0.99))
-        return result
+        try:
+            if action.has_syntax_error == task["has_syntax_error"]:
+                reward += 0.3
+            if action.severity == task["severity"]:
+                reward += 0.2
+            if task["expected_issues"]:
+                matched = 0
+                for issue in action.issues:
+                    for exp in task["expected_issues"]:
+                        if exp.lower() in issue.lower():
+                            matched += 1
+                            break
+                issue_score = matched / len(task["expected_issues"])
+                reward += 0.5 * issue_score
+            else:
+                if len(action.issues) == 0:
+                    reward += 0.5
+        except Exception:
+            reward = 0.5
+        return max(0.01, min(reward, 0.99))
 
     def step(self, action: CodeReviewAction) -> CodeReviewObservation:
         self._state.step_count += 1
         self._step += 1
         reward = self._grade(action)
         self._score = reward
-        feedback = f"Score: {reward:.2f}. "
+        feedback = "Score: " + str(round(reward, 2)) + ". "
         if reward >= 0.8:
             feedback += "Excellent review!"
         elif reward >= 0.5:
